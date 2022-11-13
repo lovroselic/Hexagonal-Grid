@@ -1,0 +1,4 @@
+3
+AABF
+FEDCBA
+BCB
