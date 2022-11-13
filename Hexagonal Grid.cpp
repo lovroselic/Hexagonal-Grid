@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -27,29 +28,6 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
-
-class OffCoord {
-public:
-	int row;
-	int col;
-
-	OffCoord() {
-		this->col = 0;
-		this->row = 0;
-	}
-	OffCoord(int c, int r) {
-		this->col = c;
-		this->row = r;
-	}
-	void print() {
-		cout << "col: " << this->col << " row: " << this->row << endl;
-	}
-	/*double distance() {
-		float x = this->col;
-		float y = ((this->col + this->row) / 2) * (2 / sqrt(3));
-		return sqrt(pow(x, 2) + pow(y, 2));
-	}*/
-};
 
 class Hex {
 public:
@@ -76,28 +54,21 @@ public:
 		this->r += dir.r;
 		this->s += dir.s;
 	}
-	/*OffCoord to_oddr() {
-		int col = this->q + (this->r - (this->r & 1)) / 2;
-		int row = this->r;
-		return OffCoord(col, row);
-	}*/
-	float distance() {
-		const float S = 1 / sqrt(3.0); // hardcoding the size W = S*sqrt(3); W = 1;
-		float y = 3.0 / 2 * S * this->r;
+	double distance() {
+		const float S = 1.0 / sqrt(3.0); // hardcoding the size W = S*sqrt(3); W = 1;
+		float y = 3.0 / 2.0 * S * this->r;
 		float x = sqrt(3.0) * S * (this->r/2.0 + this->s);
 		return sqrt(pow(x, 2) + pow(y, 2));
 	}
 };
-
-
 
 map<char, Hex> SetDirections();
 
 int main() {
 	auto t1 = high_resolution_clock::now();
 	cout << "Hexagonal Grid v" << VERSION << "!\n\n";
-	string path = "Test.txt";
-	//string path = "Try.txt";
+	//string path = "Test.txt";
+	string path = "Try.txt";
 	vector<string> raw_data = loadData(path);
 	vector<string> solution;
 
@@ -112,12 +83,10 @@ int main() {
 			reference.add(DIR[c]);
 		}
 		reference.print();
-		//OffCoord ref = reference.to_oddr();
-		//ref.print();
 		cout << reference.distance() << endl;
-
-
-
+		stringstream ss;
+		ss << fixed << setprecision(9) << reference.distance();
+		solution.push_back(ss.str());
 	}
 
 	cout << "\nSolution: " << joinVector(solution, " ") << endl;;
